@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="dynamix" type="fps.py" name="fps_dropper" output="screen"/> 
+    <node pkg="dynamix" type="semseg.py" name="semantic_segmentation" output="screen"/> 
+    <node pkg="dynamix" type="masked_pointcloud" name="points" output="screen"/>
+
+</launch>

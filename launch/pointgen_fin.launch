@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+  <node pkg="nodelet" type="nodelet" name="pipeline" args="manager" />
+
+  <include file="$(find dynamix)/launch/pointgen.launch">
+            <arg name="manager" value="/pipeline" />
+            <arg name="approximate_sync" default="true" />
+ </include>
+  
+</launch> 
