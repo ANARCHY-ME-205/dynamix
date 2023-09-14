@@ -54,7 +54,7 @@ void DepthPcl::initDepthPcl(ros::NodeHandle& nh){
 }
 
 void DepthPcl::depthCallback(const sensor_msgs::ImageConstPtr& depth_msg) {
-    std::cout << "image: " << depth_msg->header.stamp << std::endl;
+    
 
     cv_bridge::CvImagePtr depth_ptr;
     try
@@ -139,7 +139,7 @@ void DepthPcl::stateCallback(const ros::TimerEvent& /*event*/){
 
     // converting a PCL point cloud to a ROS PCL message
     pcl::toROSMsg(*cloud_msg, pub_pointcloud);
-    pub_pointcloud.header.frame_id = "map";
+    pub_pointcloud.header.frame_id = "zed2i_left_camera_optical_frame";
     pub_pointcloud.header.stamp = ros::Time::now();
 
     // Publishing our cloud image
@@ -150,10 +150,10 @@ void DepthPcl::stateCallback(const ros::TimerEvent& /*event*/){
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "depth_pointcloud");
+    ros::init(argc, argv, "masked_pointcloud");
     ros::NodeHandle node("~");
     
-    std::cout << "Starting to show full pointcloud message <pcl::PointCloud<pcl::PointXYZ>> ...." << std::endl;
+    ROS_INFO("Masked pointcloud started publishing. . .");
     DepthPcl::Ptr depth_pcl;
 
     depth_pcl.reset(new DepthPcl);

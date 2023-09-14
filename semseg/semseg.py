@@ -8,7 +8,7 @@ import cv2
 from mmseg.apis import inference_model, init_model, show_result_pyplot
 
 config_file = '/home/tamoghna/catkin_ws/src/dynamix/semseg/configs/ddrnet/ddrnet_23-slim_in1k-pre_2xb6-120k_cityscapes-1024x1024.py'
-checkpoint_file = '/home/tamoghna/catkin_ws/src/dynamix/semseg/MODELS!/ddrnet_23-slim_in1k-pre_2xb6-120k_cityscapes-1024x1024_20230426_145312-6a5e5174.pth'
+checkpoint_file = '/home/tamoghna/catkin_ws/src/dynamix/semseg/MODELS!/ddrnet_23-slim_in1k-pre_2xb6-120k_cityscapes-1024x1024.pth'
 
 # build the model from a config file and a checkpoint file
 model = init_model(config_file, checkpoint_file, device='cuda:0')
@@ -88,6 +88,12 @@ def drive_rgb (img : Image):
     pub.publish(result)
     pub1.publish(mod_result)
     pub2.publish(rgb_masked_img)
+    global publishing_started
+    
+    if not publishing_started:
+        publishing_started = True
+        sub2 = rospy.Subscriber("/zed2i/zed_node/depth/depth_registered", Image, callback=drive_depth)
+
 
 def drive_depth (img : Image):
     
@@ -115,7 +121,7 @@ if __name__ == '__main__' :
     pub2=rospy.Publisher("/zed2i/rgb_masked_image", Image, queue_size=10)
     pub3=rospy.Publisher("/zed2i/depth_masked_image", Image, queue_size=10)
     sub = rospy.Subscriber("/lowfps", Image, callback = drive_rgb)
-    sub2 = rospy.Subscriber("/zed2i/zed_node/depth/depth_registered", Image, callback = drive_depth)
-    # publishing_started = False
+    #sub2 = rospy.Subscriber("/zed2i/zed_node/depth/depth_registered", Image, callback = drive_depth)
+    publishing_started = False
     
     rospy.spin()
