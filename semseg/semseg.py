@@ -116,10 +116,10 @@ def drive_depth (img : Image):
 if __name__ == '__main__' :
     
     rospy.init_node("DRIVE")
-    pub=rospy.Publisher("/zed2i/drivable_region", Image, queue_size=10)
-    pub1=rospy.Publisher("/zed2i/model_result", Image, queue_size=10)
-    pub2=rospy.Publisher("/zed2i/rgb_masked_image", Image, queue_size=10)
-    pub3=rospy.Publisher("/zed2i/depth_masked_image", Image, queue_size=10)
+    pub=rospy.Publisher("/semseg/drivable_region", Image, queue_size=10)
+    pub1=rospy.Publisher("/semseg/model_result", Image, queue_size=10)
+    pub2=rospy.Publisher("/semseg/rgb_masked_image", Image, queue_size=10)
+    pub3=rospy.Publisher("/semseg/depth_masked_image", Image, queue_size=10)
     sub = rospy.Subscriber("/lowfps", Image, callback = drive_rgb)
     #sub2 = rospy.Subscriber("/zed2i/zed_node/depth/depth_registered", Image, callback = drive_depth)
     publishing_started = False

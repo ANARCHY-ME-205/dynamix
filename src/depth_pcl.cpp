@@ -46,9 +46,9 @@ private:
 void DepthPcl::initDepthPcl(ros::NodeHandle& nh){
     node = nh;
 
-    depth_cb = node.subscribe<sensor_msgs::Image>("/zed2i/depth_masked_image", 50, &DepthPcl::depthCallback, this);
+    depth_cb = node.subscribe<sensor_msgs::Image>("/semseg/depth_masked_image", 50, &DepthPcl::depthCallback, this);
 
-    pointcloud_publisher = node.advertise<sensor_msgs::PointCloud2>("/obstacle_points", 10);
+    pointcloud_publisher = node.advertise<sensor_msgs::PointCloud2>("/semseg/obstacle_points", 10);
 
     state_timer_ = node.createTimer(ros::Duration(0.05), &DepthPcl::stateCallback, this);
 }
@@ -92,6 +92,12 @@ void DepthPcl::stateCallback(const ros::TimerEvent& /*event*/){
         0.0, 0.0, 1.0, 0.0]  
 
     frame_id: "zed2i_left_camera_optical_frame"    
+
+    OR,
+
+    K: [265.56085205078125, 0.0, 320.9938049316406, 
+        0.0, 265.56085205078125, 183.0654296875, 
+        0.0, 0.0, 1.0]
     
     */
 
@@ -104,10 +110,10 @@ void DepthPcl::stateCallback(const ros::TimerEvent& /*event*/){
     // const double camera_fy = 180;
 
     const double camera_factor = 1;
-    const double camera_cx = 95.29173278808594;
-    const double camera_cy = 53.00518798828125;
-    const double camera_fx = 190.54971313476562;
-    const double camera_fy = 190.54971313476562;
+    const double camera_cx = 320.9938049316406;
+    const double camera_cy = 183.0654296875;
+    const double camera_fx = 265.56085205078125;
+    const double camera_fy = 265.56085205078125;
 
     // Traverse the depth image 
     for (int v = 0; v < depth_pic.rows; ++v)
@@ -140,7 +146,7 @@ void DepthPcl::stateCallback(const ros::TimerEvent& /*event*/){
     // converting a PCL point cloud to a ROS PCL message
     pcl::toROSMsg(*cloud_msg, pub_pointcloud);
     pub_pointcloud.header.frame_id = "zed2i_left_camera_optical_frame";
-    pub_pointcloud.header.stamp = ros::Time::now();
+    pub_pointcloud.header.stamp = ros::Time(0);
 
     // Publishing our cloud image
     pointcloud_publisher.publish(pub_pointcloud);
